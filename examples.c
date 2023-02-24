@@ -48,18 +48,6 @@ void switch_case_example(int i)
     }
 }
 
-void goto_example(void)
-{
-    while (1)
-    {
-        char smth = 'a';
-        if (smth == 'a') goto jump_here;
-    }
-
-jump_here:
-    return;
-}
-
 void loop_example(void)
 {
     int integers[] = {1, 2, 3, 4, 5};

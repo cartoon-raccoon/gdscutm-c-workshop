@@ -1,16 +1,22 @@
+/* commonly used imports */
+
+// Basic I/O (printing to screen, reading input, etc)
 #include <stdio.h>
+// Basic conversion functions and memory management
 #include <stdlib.h>
+// String manipulation functions
+#include <string.h>
+// Defines boolean types
 #include <stdbool.h>
+// Math functions
+#include <math.h>
 
-// function prototypes
-int some_function_call(void);
-
+/* function prototypes */
 void struct_demo(void);
 void do_swap();
-void swap_two_numbers_wrong(int x, int y);
-void swap_two_numbers_correctly(int *x, int*y);
 void stack_vs_heap(void);
 
+/* our entry point */
 int main(void)
 {
     printf("%s\n", "Hello World!");
@@ -23,10 +29,12 @@ void if_statement_example(int i)
     if (i == 1)
     {
         // do something
-    } else if (i == 2)
+    } 
+    else if (i == 2)
     {
         // do something else
-    } else
+    } 
+    else
     {
         // default thing to do
     }
@@ -95,18 +103,6 @@ void type_casting_example(void)
 
 /* ========== SECTION 2: POINTERS AND MEMORY MANAGEMENT ========== */
 
-void do_swap(void)
-{
-    int x = 69;
-    int y = 420;
-
-    printf("x is %i, y is %i\n", x, y);
-
-    swap_two_numbers_correctly(&x, &y);
-
-    printf("after swap, x is %i, y is %i\n", x, y);
-}
-
 void swap_two_numbers_wrong(int x, int y)
 {
     int temp = x;
@@ -119,6 +115,18 @@ void swap_two_numbers_correctly(int *x, int *y)
     int temp = *x;
     *x = *y;
     *y = temp;
+}
+
+void do_swap(void)
+{
+    int x = 69;
+    int y = 420;
+
+    printf("x is %i, y is %i\n", x, y);
+
+    swap_two_numbers_correctly(&x, &y);
+
+    printf("after swap, x is %i, y is %i\n", x, y);
 }
 
 void stack_vs_heap(void)

@@ -7,36 +7,38 @@ void populate_list(linkedlist *list);
 
 // driver code
 int main(void)
-{
-    linkedlist *list = linkedlist_create();
+{   //! there is a problem with this code. see if you can find it!
+    linkedlist list;
+    list.len = 0;
+    list.head = NULL;
     
     // test printing on an empty list
-    linkedlist_print(list);
+    linkedlist_print(&list);
 
     // populate the list with numbers
-    populate_list(list);
+    populate_list(&list);
 
     // print the new list
-    linkedlist_print(list);
+    linkedlist_print(&list);
 
     // try removing an item from the list
-    int item1 = linkedlist_remove(list, 4);
+    int item1 = linkedlist_remove(&list, 4);
     printf("Removed item at index 4, got %i\n", item1);
 
+    //try popping from the list
+    int item2 = linkedlist_pop(&list);
+    printf("Popped from list, got %i\n", item2);
+
     // try removing from an out of bounds index
-    int item2 = linkedlist_remove(list, 10);
-    printf("Out of bounds was handled, got %i\n", item2);
+    int item3 = linkedlist_remove(&list, 10);
+    printf("Out of bounds was handled, got %i\n", item3);
 
-    // try and out of bounds index
-    int *idx = linkedlist_index(list, 10);
+    // try an out of bounds index
+    int *idx = linkedlist_index(&list, 10);
     if (idx == NULL)
-    {
         printf("Out of bounds access was handled correctly!\n");
-    }
 
-    linkedlist_print(list);
-    linkedlist_destroy(list);
-    list = NULL;
+    linkedlist_print(&list);
 
     return 0;
 }
@@ -44,9 +46,7 @@ int main(void)
 void populate_list(linkedlist *list)
 {
     for (int i = 0; i < 5; i++)
-    {
         linkedlist_push(list, i + 1);
-    }
 
     linkedlist_append(list, 6);
     linkedlist_append(list, 7);
@@ -56,11 +56,10 @@ linkedlist *linkedlist_create()
 {
     // allocate memory for a new linked list
     linkedlist *list = malloc(sizeof(linkedlist));
-    if (!list)
-    {
-        return NULL;
-    }
-    // set list head to NULL
+    if (!list) return NULL;
+    
+    // set size to 0 list head to NULL
+    list->len = 0;
     list->head = NULL;
 
     return list;
@@ -92,10 +91,8 @@ int linkedlist_push(linkedlist *list, int item)
     // allocate memory for a new node
     node *n = malloc(sizeof(node));
     // check if allocation failed
-    if (n == NULL)
-    {
-        return 0;
-    }
+    if (n == NULL) return 0;
+
     // store the list head in a temporary stack variable
     node* temp = list->head;
 
@@ -103,8 +100,9 @@ int linkedlist_push(linkedlist *list, int item)
     n->value = item;
     n->next = temp;
 
-    // store n as the list head
+    // store n as the list head and update length
     list->head = n;
+    list->len++;
 
     return 1;
 }
@@ -114,10 +112,7 @@ int linkedlist_append(linkedlist *list, int item)
     // create a node by allocating memory
     node *n = malloc(sizeof(node));
     // check if allocation failed
-    if (n == NULL)
-    {
-        return 0;
-    }
+    if (n == NULL) return 0;
 
     // initialize the new node
     n->value = item;
@@ -138,12 +133,38 @@ int linkedlist_append(linkedlist *list, int item)
         }
         ptr->next = n;
     }
+    // update list length
+    list->len++;
 
     return 1;
 }
 
+int linkedlist_pop(linkedlist *list)
+{
+    // check if list is empty
+    if (!(list->head)) return 0;
+
+    // assign the value to return
+    int ret = list->head->value;
+
+    // get the node we want to free, which is the head
+    node *to_free = list->head;
+    // get the next node, it is now the new head
+    list->head = to_free->next;
+    // we can now deallocate the old head
+    free(to_free);
+
+    // decrement the list size
+    list->len--;
+
+    return ret;
+}
+
 int linkedlist_remove(linkedlist *list, int idx)
 {
+    // check for out of bounds
+    if (list->len < idx + 1) return 0;
+
     // declare and initialize a cursor variable
     node *cur = list->head;
     // iterate to the item before the item to remove
@@ -167,12 +188,16 @@ int linkedlist_remove(linkedlist *list, int idx)
     // since the node we want to remove is no longer pointed to,
     // we can safely free it
     free(rem);
+    // decrement list length
+    list->len--;
 
     return ret;
 }
 
 int *linkedlist_index(linkedlist *list, int idx)
 {
+    // check for out of bounds
+    if (list->len < idx + 1) return NULL;
     // declare and initialize a cursor variable
     node *cur = list->head;
     // iterate to the index
@@ -181,8 +206,7 @@ int *linkedlist_index(linkedlist *list, int idx)
         cur = cur->next;
         // if we've reached the end, then we have
         // an out of bounds error
-        if (cur == NULL)
-            return NULL;
+        if (cur == NULL) return NULL;
     }
 
     return &(cur->value);

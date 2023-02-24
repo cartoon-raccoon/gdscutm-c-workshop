@@ -61,6 +61,15 @@ class LinkedList(object):
 
             cur.next = _Node(item)
 
+    def pop(self) -> Any:
+        if self.head is None:
+            raise IndexError
+        
+        ret = self.head.item
+        self.head = self.head.next
+
+        return ret
+
     def remove(self, idx: int) -> Any:
         if self.head is None:
             raise IndexError

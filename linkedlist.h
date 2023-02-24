@@ -6,6 +6,7 @@ typedef struct node {
 
 // declaring the wrapper struct
 typedef struct linkedlist {
+    int len;
     struct node *head;
 } linkedlist;
 
@@ -14,6 +15,7 @@ typedef struct linkedlist {
 // constructor and destructor functions
 
 /// Allocates a new linked list.
+/// Returns a null pointer if the underlying allocation fails.
 linkedlist *linkedlist_create(void);
 
 /// Deallocates all the nodes in `list` and then deallocates `list` itself.
@@ -28,6 +30,10 @@ int linkedlist_push(linkedlist *list, int item);
 /// Appends a new item to the end of the linked list.
 /// Item indexes do not change.
 int linkedlist_append(linkedlist *list, int item);
+
+/// Removes the first element in the list,
+/// moving all items up by one index.
+int linkedlist_pop(linkedlist *list);
 
 /// Removes an item from the list at the specified index,
 /// deallocating the node and returning its value.

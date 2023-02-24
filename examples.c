@@ -80,6 +80,19 @@ void loop_example(void)
     }
 }
 
+void type_casting_example(void)
+{
+    // Casting a character to an integer (its ASCII value)
+    char ex = 'A';
+    int ex_as_int = (int) ex;
+
+    // Casting ex from an integer to a float
+    float ex_as_float = (float) ex_as_int;
+
+    // Casting an integer to a pointer (points to memory address 0)
+    void *null = (void *) 0;
+}
+
 /* ========== SECTION 2: POINTERS AND MEMORY MANAGEMENT ========== */
 
 void do_swap(void)
@@ -160,6 +173,10 @@ void struct_demo(void)
 
     // allocating a new struct on the heap
     newstruct *a_struct2 = malloc(sizeof(newstruct));
+    if (a_struct2 == NULL)
+    {
+        // do some error handling
+    }
 
     // dereferencing a struct to access its fields
     (*a_struct2).field1 = 69;
